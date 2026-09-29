@@ -14,10 +14,10 @@ import java.util.Properties;
 public class EmailUtil {
 
     private static final String FROM_EMAIL =
-            System.getenv("MAIL_USERNAME");
+            System.getenv("GMAIL_USERNAME");
 
     private static final String APP_PASSWORD =
-            System.getenv("MAIL_PASSWORD");
+            System.getenv("GMAIL_APP_PASSWORD");
 
     public static boolean sendConfirmationEmail(
             String toEmail,
