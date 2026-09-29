@@ -1,6 +1,6 @@
-# ================================
-# STAGE 1: BUILD MAVEN PROJECT
-# ================================
+# ==============================
+# STAGE 1: BUILD WAR
+# ==============================
 FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
@@ -13,16 +13,17 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 
-# ================================
-# STAGE 2: RUN WITH TOMCAT 9
-# ================================
+# ==============================
+# STAGE 2: TOMCAT
+# ==============================
 FROM tomcat:9.0-jdk17-temurin
 
+# Xóa webapps mặc định
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-COPY --from=build /app/target/EmailList.war \
-    /usr/local/tomcat/webapps/ROOT.war
+# Copy WAR đã build vào Tomcat
+COPY --from=build /app/target/EmailList.war /usr/local/tomcat/webapps/EmailList.war
 
-EXPOSE 10000
+EXPOSE 8080
 
-CMD ["sh", "-c", "sed -i 's/port=\"8080\"/port=\"'\"${PORT:-10000}\"'\"/' /usr/local/tomcat/conf/server.xml && catalina.sh run"]
+CMD ["catalina.sh", "run"]
